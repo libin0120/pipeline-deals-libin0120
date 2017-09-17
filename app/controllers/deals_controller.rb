@@ -17,24 +17,29 @@ class DealsController < ApplicationController
     pages = 1
 
     loop do
-      RestClient.get "#{API_ENDPOINT}/deals.json?api_key=#{API_KEY}&page=#{page}&per_page=10" do |response|
+      RestClient.get "#{API_ENDPOINT}/deals.json?api_key=#{API_KEY}&page=#{page}&per_page=10" do |response, request, result, &block|
 
-        response_hash = JSON.parse(response)
+        case response.code
+          when 200
+            response_hash = JSON.parse(response)
 
-        @deals += response_hash['entries'].map do |entry|
+            @deals += response_hash['entries'].map do |entry|
 
-          deal = Deal.new(entry.slice 'name', 'value', 'deal_stage_id', 'deal_stage')
+              deal = Deal.new(entry.slice 'name', 'value', 'deal_stage_id', 'deal_stage')
 
-          @stages[deal.deal_stage_id] ||= deal.deal_stage # Add new deal_stage record if not existing
+              @stages[deal.deal_stage_id] ||= deal.deal_stage # Add new deal_stage record if not existing
 
-          @stages_summary[deal.deal_stage] ||= 0.0 # Initialize deal_stage total value as 0 if not existing yet
+              @stages_summary[deal.deal_stage] ||= 0.0 # Initialize deal_stage total value as 0 if not existing yet
 
-          @stages_summary[deal.deal_stage] += deal.value
+              @stages_summary[deal.deal_stage] += deal.value
 
-          deal
+              deal
+            end
+
+            pages = response_hash['pagination']['pages'].to_i
+          else
+            error_handler(response)
         end
-
-        pages = response_hash['pagination']['pages'].to_i
       end
 
       page += 1 # move on next page

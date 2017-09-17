@@ -42,7 +42,6 @@ class DealsController < ApplicationController
     end
 
 
-
     @stages_summary.keys.sort{|x, y| x['percent'] <=> y['percent'] }.each do |stage|
       @stages_summary_sorted_names << stage['name']
       @stages_summary_sorted_values << @stages_summary[stage].to_f

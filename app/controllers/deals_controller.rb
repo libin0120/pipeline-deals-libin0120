@@ -11,23 +11,37 @@ class DealsController < ApplicationController
     @stages_summary_sorted_values = []
 
 
-    RestClient.get "#{API_ENDPOINT}/deals.json?api_key=#{API_KEY}" do |response|
 
-      response_hash = JSON.parse(response)
+    # Load data
+    page = 1 # start from the first page by default
+    pages = 1
 
-      @deals += response_hash['entries'].map do |entry|
+    loop do
+      RestClient.get "#{API_ENDPOINT}/deals.json?api_key=#{API_KEY}&page=#{page}&per_page=10" do |response|
 
-        deal = Deal.new(entry.slice 'name', 'value', 'deal_stage_id', 'deal_stage')
+        response_hash = JSON.parse(response)
 
-        @stages[deal.deal_stage_id] ||= deal.deal_stage # Add new deal_stage record if not existing
+        @deals += response_hash['entries'].map do |entry|
 
-        @stages_summary[deal.deal_stage] ||= 0.0 # Initialize deal_stage total value as 0 if not existing yet
+          deal = Deal.new(entry.slice 'name', 'value', 'deal_stage_id', 'deal_stage')
 
-        @stages_summary[deal.deal_stage] += deal.value
+          @stages[deal.deal_stage_id] ||= deal.deal_stage # Add new deal_stage record if not existing
 
-        deal
+          @stages_summary[deal.deal_stage] ||= 0.0 # Initialize deal_stage total value as 0 if not existing yet
+
+          @stages_summary[deal.deal_stage] += deal.value
+
+          deal
+        end
+
+        pages = response_hash['pagination']['pages'].to_i
       end
+
+      page += 1 # move on next page
+      break if page > pages # stop if get all pages done
     end
+
+
 
     @stages_summary.keys.sort{|x, y| x['percent'] <=> y['percent'] }.each do |stage|
       @stages_summary_sorted_names << stage['name']
@@ -35,7 +49,6 @@ class DealsController < ApplicationController
     end
 
     # Set chart object
-
 
     @chart = LazyHighCharts::HighChart.new('graph') do |f|
       f.title(text: "Deals summarized based on stages")

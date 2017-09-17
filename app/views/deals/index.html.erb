@@ -1,21 +1,23 @@
-Here we will show the deals chart loaded from Pipeline Deals
+<h3>Deals value summary chart loaded from Pipeline Deals API </h3>
 
-<% @deals.each do |deal| %>
-  <%= content_tag :div do %>
-    <%= "Name: #{deal.name}" %>
-    <%= "Value: #{deal.value}" %>
-    <%= "Stage: #{deal.deal_stage}" %>
-  <% end %>
-<% end %>
+<div id="deal_stages_chart"></div>
 
-<p> ============ </p>
+<%= high_chart("deal_stages_chart", @chart) %>
 
+<% # @deals.each do |deal| %>
+  <%# = content_tag :div do %>
+    <%# = "Name: #{deal.name}" %>
+    <%# = "Value: #{deal.value}" %>
+    <%# = "Stage: #{deal.deal_stage}" %>
+  <%# end %>
+<%#  end %>
 
-<% @stages_summary.keys.sort{|x, y| x['percent'] <=> y['percent'] }.each do |stage| %>
-    <%= content_tag :div do %>
-        <%= "Stage: #{stage['name']}" %>
-        <%= "Stage Percent: #{stage['percent']}" %>
-        <%= "Value: #{@stages_summary[stage]}" %>
-    <% end %>
-<% end %>
+<%#  @stages_summary.keys.sort{|x, y| x['percent'] <=> y['percent'] }.each do |stage| %>
+    <%# = content_tag :div do %>
+        <%# = "Stage: #{stage['name']}" %>
+        <%# = "Stage Percent: #{stage['percent']}" %>
+        <%# = "Value: #{@stages_summary[stage]}" %>
+    <%# end %>
+<%#  end %>
+
 

@@ -7,6 +7,9 @@ class DealsController < ApplicationController
     @stages = {}
     @stages_summary = {}
 
+    @stages_summary_sorted_names = []
+    @stages_summary_sorted_values = []
+
 
     RestClient.get "#{API_ENDPOINT}/deals.json?api_key=#{API_KEY}" do |response|
 
@@ -26,6 +29,26 @@ class DealsController < ApplicationController
       end
     end
 
+    @stages_summary.keys.sort{|x, y| x['percent'] <=> y['percent'] }.each do |stage|
+      @stages_summary_sorted_names << stage['name']
+      @stages_summary_sorted_values << @stages_summary[stage].to_f
+    end
+
+    # Set chart object
+
+
+    @chart = LazyHighCharts::HighChart.new('graph') do |f|
+      f.title(text: "Deals summarized based on stages")
+      f.xAxis(categories: @stages_summary_sorted_names)
+      f.series(name: "Total deal values grouped by stage", yAxis: 0, data: @stages_summary_sorted_values)
+
+      f.yAxis [
+                {title: {text: "Total deal values grouped by stage"} }
+              ]
+
+      f.legend(align: 'right', verticalAlign: 'top', y: 75, x: -50, layout: 'vertical')
+      f.chart({defaultSeriesType: "column"})
+    end
 
   end
 

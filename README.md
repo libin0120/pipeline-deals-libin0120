@@ -1,5 +1,10 @@
 # pipeline-deals-libin0120
 
+* A public server is deployed at Heroku for easy access to review:
+
+  https://pipeline-deals-libin0120.herokuapp.com/
+
+
 * Notes: 
   * To run server `rails server`
   * To show the chart access `http://localhost:3000/` or `http://localhost:3000/deals`

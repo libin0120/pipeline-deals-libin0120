@@ -1,8 +1,25 @@
 class Deal
-
   include ActiveModel::Model
 
-  attr_accessor :id, :name, :value, :status, :deal_stage_id, :deal_stage
+  attr_accessor :id, :name, :value, :deal_stage_id, :deal_stage
 
-  validates :name, presence: true
+  validates :id, :name, :value, :deal_stage_id, :deal_stage, presence: true
+
+  def id=(val)
+    @id = val.to_i
+  end
+
+  def value=(val)
+    @value = val.to_i
+  end
+
+  def deal_stage_id=(val)
+    @deal_stage_id = val.to_i
+  end
+
+  def deal_stage=(val)
+    @deal_stage = val
+    @deal_stage['id'] = val['id'].to_i
+    @deal_stage['percent'] = val['percent'].to_i
+  end
 end

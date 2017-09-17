@@ -10,7 +10,7 @@ class Deal
   end
 
   def value=(val)
-    @value = val.to_i
+    @value = BigDecimal.new(val) # val.to_f
   end
 
   def deal_stage_id=(val)

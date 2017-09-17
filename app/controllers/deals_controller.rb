@@ -18,7 +18,7 @@ class DealsController < ApplicationController
 
         @stages[deal.deal_stage_id] ||= deal.deal_stage # Add new deal_stage record if not existing
 
-        @stages_summary[deal.deal_stage] ||= 0 # Initialize deal_stage total value as 0 if not existing yet
+        @stages_summary[deal.deal_stage] ||= 0.0 # Initialize deal_stage total value as 0 if not existing yet
 
         @stages_summary[deal.deal_stage] += deal.value
 

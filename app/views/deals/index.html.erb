@@ -5,12 +5,17 @@ Here we will show the deals chart loaded from Pipeline Deals
     <%= "Name: #{deal.name}" %>
     <%= "Value: #{deal.value}" %>
     <%= "Stage: #{deal.deal_stage}" %>
-
-
-
   <% end %>
-
 <% end %>
 
+<p> ============ </p>
 
+
+<% @stages_summary.keys.sort{|x, y| x['percent'] <=> y['percent'] }.each do |stage| %>
+    <%= content_tag :div do %>
+        <%= "Stage: #{stage['name']}" %>
+        <%= "Stage Percent: #{stage['percent']}" %>
+        <%= "Value: #{@stages_summary[stage]}" %>
+    <% end %>
+<% end %>
 

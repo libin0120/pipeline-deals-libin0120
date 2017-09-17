@@ -1,1 +1,16 @@
 Here we will show the deals chart loaded from Pipeline Deals
+
+<% @deals.each do |deal| %>
+  <%= content_tag :div do %>
+    <%= "Name: #{deal.name}" %>
+    <%= "Value: #{deal.value}" %>
+    <%= "Stage: #{deal.deal_stage}" %>
+
+
+
+  <% end %>
+
+<% end %>
+
+
+

@@ -16,8 +16,12 @@ class DealsController < ApplicationController
     page = 1 # start from the first page by default
     pages = 1
 
+    per_page = ENV['PER_PAGE'] || PER_PAGE
+    api_key = ENV['API_KEY'] || API_KEY
+
     loop do
-      RestClient.get "#{API_ENDPOINT}/deals.json?api_key=#{API_KEY}&page=#{page}&per_page=10" do |response, request, result, &block|
+      byebug
+      RestClient.get "#{API_ENDPOINT}/deals.json?api_key=#{api_key}&page=#{page}&per_page=#{per_page}" do |response, request, result, &block|
 
         case response.code
           when 200

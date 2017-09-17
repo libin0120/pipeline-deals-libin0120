@@ -20,7 +20,6 @@ class DealsController < ApplicationController
     api_key = ENV['API_KEY'] || API_KEY
 
     loop do
-      byebug
       RestClient.get "#{API_ENDPOINT}/deals.json?api_key=#{api_key}&page=#{page}&per_page=#{per_page}" do |response, request, result, &block|
 
         case response.code
